@@ -142,6 +142,8 @@ set(libunbound_src
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(SYSTEM ${LIBEVENT2_INCLUDE_DIRS})
+link_directories(${LIBEVENT2_LIBRARY_DIRS})
 add_library(unbound
   ${common_src}
   ${sldns_src}
