@@ -14,8 +14,7 @@ add_definitions(-D_GNU_SOURCE)
 
 option(USE_ECDSA "Use ECDSA algorithms" ON)
 option(USE_SHA2 "Enable SHA2 support" ON)
-set(ENABLE_DNSTAP 1)
-set(USE_DNSTAP 1)
+set(ENABLE_DNSTAP 0)
 set(HAVE_SSL 1)
 if (CMAKE_USE_PTHREADS_INIT)
   set(HAVE_PTHREAD 1)
@@ -30,9 +29,6 @@ endif ()
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/dnstap/dnstap_config.h.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/dnstap/dnstap_config.h")
 
 set(common_src
   services/cache/dns.c
