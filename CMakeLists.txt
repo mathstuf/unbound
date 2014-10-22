@@ -96,24 +96,20 @@ set(common_src
   #$(CHECKLOCK_SRC)
   testcode/checklocks.c)
 
-set(compat_src
-  compat/ctime_r.c
-  compat/gmtime_r.c
-  compat/inet_aton.c
-  compat/inet_ntop.c
-  compat/inet_pton.c
-  compat/malloc.c
-  compat/memcmp.c
-  compat/memmove.c
-  compat/snprintf.c
-  compat/strlcat.c
-  compat/strlcpy.c
-  compat/strptime.c
-  compat/explicit_bzero.c
-  compat/arc4random.c
-  compat/arc4random_uniform.c
-  compat/arc4_lock.c
-  compat/sha512.c)
+set(compat_src)
+
+foreach (symbol IN ITEMS ctime_r gmtime_r inet_aton inet_ntop inet_pton malloc memcmp memmove snprintf strlcat strlcpy strptime explicit_bzero arc4random arc4random_uniform sha512)
+  string(TOUPPER "${symbol}" upper_sym)
+  if (NOT HAVE_${upper_sym})
+    list(APPEND compat_src
+      compat/${symbol}.c)
+  endif ()
+endforeach ()
+
+if (NOT HAVE_ARC4RANDOM)
+  list(APPEND compat_src
+    compat/arc4_lock.c)
+endif ()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
   list(APPEND compat_src
