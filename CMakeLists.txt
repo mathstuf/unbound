@@ -142,12 +142,12 @@ set(libunbound_src
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-add_library(libunbound
+add_library(unbound
   ${common_src}
   ${sldns_src}
   ${compat_src}
   ${libunbound_src})
-target_link_libraries(libunbound
+target_link_libraries(unbound
   PRIVATE
     ${OPENSSL_CRYPTO_LIBRARY}
     ${OPENSSL_SSL_LIBRARY}
