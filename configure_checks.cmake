@@ -104,10 +104,10 @@ function (check_type_exists type variable header default)
   set(CMAKE_EXTRA_INCLUDE_FILES "${header}")
   check_type_size("${type}" "${variable}")
 
-  if (NOT ${variable})
+  if (${variable} STREQUAL "")
     set("${variable}" "${default}" PARENT_SCOPE)
   else ()
-    set("${variable}" PARENT_SCOPE)
+    set("${variable}" "" PARENT_SCOPE)
   endif ()
 endfunction ()
 
