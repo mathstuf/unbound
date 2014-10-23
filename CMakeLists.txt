@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 2.8.8)
 
 project(unbound C)
 
-include(configure_checks.cmake)
-
 find_package(OpenSSL REQUIRED)
 find_package(Threads)
+
+include(configure_checks.cmake)
 
 if (WIN32)
   set(USE_MINI_EVENT 1)
