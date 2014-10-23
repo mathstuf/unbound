@@ -746,7 +746,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <assert.h>
 
 #if STDC_HEADERS
@@ -770,6 +772,10 @@
 
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
 #endif
 
 #ifdef HAVE_SYS_UIO_H
