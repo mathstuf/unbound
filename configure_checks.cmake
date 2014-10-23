@@ -139,11 +139,16 @@ check_symbol_exists(pthread_rwlock_t "pthread.h" HAVE_PTHREAD_RWLOCK_T)
 check_symbol_exists(pthread_spinlock_t "pthread.h" HAVE_PTHREAD_SPINLOCK_T)
 
 # openssl
+set(CMAKE_REQUIRED_INCLUDES
+  ${OPENSSL_INCLUDE_DIR})
+
 check_include_file(openssl/conf.h HAVE_OPENSSL_CONF_H)
 check_include_file(openssl/engine.h HAVE_OPENSSL_ENGINE_H)
 check_include_file(openssl/err.h HAVE_OPENSSL_ERR_H)
 check_include_file(openssl/rand.h HAVE_OPENSSL_RAND_H)
 check_include_file(openssl/ssl.h HAVE_OPENSSL_SSL_H)
+
+set(CMAKE_REQUIRED_INCLUDES)
 
 check_symbol_exists(NID_secp384r1 "openssl/evp.h" HAVE_DECL_NID_SECP384R1)
 check_symbol_exists(NID_X9_62_prime256v1 "openssl/evp.h" HAVE_DECL_NID_X9_62_PRIME256V1)
@@ -151,10 +156,7 @@ check_symbol_exists(sk_SSL_COMP_pop_free "openssl/ssl.h" HAVE_DECL_SK_SSL_COMP_P
 check_symbol_exists(SSL_COMP_get_compression_methods "openssl/ssl.h" HAVE_DECL_SSL_COMP_GET_COMPRESSION_METHODS)
 
 set(CMAKE_REQUIRED_LIBRARIES
-  ${OPENSSL_CRYPTO_LIBRARY}
-  ${OPENSSL_SSL_LIBRARY}
-  ${SSL_EAY}
-  ${LIB_EAY})
+  ${OPENSSL_LIBRARIES})
 
 check_function_exists(EVP_sha1 HAVE_EVP_SHA1)
 check_function_exists(EVP_sha256 HAVE_EVP_SHA256)

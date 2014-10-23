@@ -152,6 +152,7 @@ set(libunbound_src
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
 if (LIBEVENT2_FOUND)
   include_directories(SYSTEM ${LIBEVENT2_INCLUDE_DIRS})
   link_directories(${LIBEVENT2_LIBRARY_DIRS})
@@ -163,10 +164,7 @@ add_library(unbound
   ${libunbound_src})
 target_link_libraries(unbound
   PRIVATE
-    ${OPENSSL_CRYPTO_LIBRARY}
-    ${OPENSSL_SSL_LIBRARY}
-    ${SSL_EAY}
-    ${LIB_EAY}
+    ${OPENSSL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT})
 if (LIBEVENT2_FOUND)
   target_link_libraries(unbound
