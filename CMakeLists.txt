@@ -29,6 +29,9 @@ endif ()
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/dnstap/dnstap_config.h.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/dnstap/dnstap_config.h")
 
 set(common_src
   services/cache/dns.c
