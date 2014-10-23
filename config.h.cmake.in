@@ -498,7 +498,7 @@
 #undef PTHREAD_CREATE_JOINABLE
 
 /* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
+#cmakedefine RETSIGTYPE @RETSIGTYPE@
 
 /* default rootkey location */
 #undef ROOT_ANCHOR_FILE
@@ -629,13 +629,13 @@
 #cmakedefine const
 
 /* Define to `int' if <sys/types.h> doesn't define. */
-#cmakedefine gid_t
+#cmakedefine gid_t @gid_t@
 
 /* in_addr_t */
-#cmakedefine in_addr_t
+#cmakedefine in_addr_t @in_addr_t@
 
 /* in_port_t */
-#cmakedefine in_port_t
+#cmakedefine in_port_t @in_port_t@
 
 /* Define to `__inline__' or `__inline' if that's what the C compiler
    calls it, or to nothing if 'inline' is not supported under any name.  */
@@ -665,7 +665,7 @@
 #cmakedefine pid_t
 
 /* Define to 'int' if not defined */
-#cmakedefine rlim_t
+#cmakedefine rlim_t @rlim_t@
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 #cmakedefine size_t
@@ -680,7 +680,7 @@
 #cmakedefine u_char
 
 /* Define to `int' if <sys/types.h> doesn't define. */
-#cmakedefine uid_t
+#cmakedefine uid_t @uid_t@
 
 /* Define to `unsigned short' if <sys/types.h> does not define. */
 #cmakedefine uint16_t
@@ -695,7 +695,7 @@
 #cmakedefine uint8_t
 
 /* Define as `fork' if `vfork' does not work. */
-#cmakedefine vfork
+#cmakedefine vfork @vfork@
 
 #if defined(OMITTED__D_GNU_SOURCE) && !defined(_GNU_SOURCE)
 #define _GNU_SOURCE 1

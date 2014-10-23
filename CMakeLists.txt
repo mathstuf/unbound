@@ -5,10 +5,17 @@ project(unbound C)
 include(configure_checks.cmake)
 
 find_package(OpenSSL REQUIRED)
-find_package(PkgConfig REQUIRED)
 find_package(Threads)
 
-pkg_check_modules(LIBEVENT2 REQUIRED libevent)
+if (WIN32)
+  set(USE_MINI_EVENT 1)
+  set(USE_WINSOCK 1)
+else ()
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(LIBEVENT2 REQUIRED libevent)
+endif ()
+
+set(RETSIGTYPE void)
 
 add_definitions(-D_GNU_SOURCE)
 
@@ -16,7 +23,7 @@ option(USE_ECDSA "Use ECDSA algorithms" ON)
 option(USE_SHA2 "Enable SHA2 support" ON)
 set(ENABLE_DNSTAP 0)
 set(HAVE_SSL 1)
-if (CMAKE_USE_PTHREADS_INIT)
+if (CMAKE_USE_PTHREADS_INIT AND NOT CMAKE_USE_WIN32_THREADS_INIT)
   set(HAVE_PTHREAD 1)
 else ()
   set(HAVE_PTHREAD 0)
@@ -145,8 +152,10 @@ set(libunbound_src
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-include_directories(SYSTEM ${LIBEVENT2_INCLUDE_DIRS})
-link_directories(${LIBEVENT2_LIBRARY_DIRS})
+if (LIBEVENT2_FOUND)
+  include_directories(SYSTEM ${LIBEVENT2_INCLUDE_DIRS})
+  link_directories(${LIBEVENT2_LIBRARY_DIRS})
+endif ()
 add_library(unbound
   ${common_src}
   ${sldns_src}
@@ -156,5 +165,18 @@ target_link_libraries(unbound
   PRIVATE
     ${OPENSSL_CRYPTO_LIBRARY}
     ${OPENSSL_SSL_LIBRARY}
-    ${LIBEVENT2_LIBRARIES}
+    ${SSL_EAY}
+    ${LIB_EAY}
     ${CMAKE_THREAD_LIBS_INIT})
+if (LIBEVENT2_FOUND)
+  target_link_libraries(unbound
+    PRIVATE
+      ${LIBEVENT2_LIBRARIES})
+endif ()
+
+if (WIN32)
+  target_link_libraries(unbound
+    PRIVATE
+      iphlpapi
+      ws2_32)
+endif ()

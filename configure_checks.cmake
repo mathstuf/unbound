@@ -1,6 +1,7 @@
 include(CheckIncludeFile)
 include(CheckFunctionExists)
 include(CheckSymbolExists)
+include(CheckTypeSize)
 
 # Need expat.
 
@@ -40,6 +41,12 @@ check_include_file(vfork.h HAVE_VFORK_H)
 check_include_file(windows.h HAVE_WINDOWS_H)
 check_include_file(winsock2.h HAVE_WINSOCK2_H)
 check_include_file(ws2tcpip.h HAVE_WS2TCPIP_H)
+
+if (WIN32)
+  set(CMAKE_REQUIRED_LIBRARIES
+    iphlpapi
+    ws2_32)
+endif ()
 
 check_function_exists(arc4random HAVE_ARC4RANDOM)
 check_function_exists(arc4random_uniform HAVE_ARC4RANDOM_UNIFORM)
@@ -93,6 +100,40 @@ check_function_exists(usleep HAVE_USLEEP)
 check_function_exists(writev HAVE_WRITEV)
 check_function_exists(_beginthreadex HAVE__BEGINTHREADEX)
 
+function (check_type_exists type variable header default)
+  set(CMAKE_EXTRA_INCLUDE_FILES "${header}")
+  check_type_size("${type}" "${variable}")
+
+  if (NOT ${variable})
+    set("${variable}" "${default}" PARENT_SCOPE)
+  else ()
+    set("${variable}" PARENT_SCOPE)
+  endif ()
+endfunction ()
+
+set(CMAKE_EXTRA_INCLUDE_FILES "time.h")
+check_type_size(time_t SIZEOF_TIME_T)
+set(CMAKE_EXTRA_INCLUDE_FILES)
+
+check_type_exists(gid_t gid_t "sys/types.h" int)
+check_type_exists(in_addr_t in_addr_t "netinet/in.h" uint32_t)
+check_type_exists(in_port_t in_port_t "netinet/in.h" uint16_t)
+check_type_exists(rlim_t rlim_t "sys/resource.h" "unsigned long")
+check_type_exists(uid_t uid_t "sys/types.h" int)
+
+if (WIN32)
+  set(UB_ON_WINDOWS 1)
+endif ()
+
+if (NOT HAVE_VFORK)
+  set(vfork fork)
+endif ()
+
+# XXX: Check for broken malloc()?
+# XXX: Check for broken memcmp()?
+# XXX: Check for broken vfork()?
+# XXX: Check for one-arg mkdir?
+
 check_symbol_exists(PTHREAD_PRIO_INHERIT "pthread.h" HAVE_PTHREAD_PRIO_INHERIT)
 check_symbol_exists(pthread_rwlock_t "pthread.h" HAVE_PTHREAD_RWLOCK_T)
 check_symbol_exists(pthread_spinlock_t "pthread.h" HAVE_PTHREAD_SPINLOCK_T)
@@ -111,7 +152,9 @@ check_symbol_exists(SSL_COMP_get_compression_methods "openssl/ssl.h" HAVE_DECL_S
 
 set(CMAKE_REQUIRED_LIBRARIES
   ${OPENSSL_CRYPTO_LIBRARY}
-  ${OPENSSL_SSL_LIBRARY})
+  ${OPENSSL_SSL_LIBRARY}
+  ${SSL_EAY}
+  ${LIB_EAY})
 
 check_function_exists(EVP_sha1 HAVE_EVP_SHA1)
 check_function_exists(EVP_sha256 HAVE_EVP_SHA256)
@@ -120,6 +163,8 @@ check_function_exists(FIPS_mode HAVE_FIPS_MODE)
 check_function_exists(HMAC_CTX_init HAVE_HMAC_CTX_INIT)
 check_function_exists(OPENSSL_config HAVE_OPENSSL_CONFIG)
 check_function_exists(SHA512_Update HAVE_SHA512_UPDATE)
+
+set(CMAKE_REQUIRED_LIBRARIES)
 
 set(UNBOUND_CONFIGFILE "${CMAKE_INSTALL_PREFIX}/etc/unbound/unbound.conf"
  CACHE STRING "default configuration file")
